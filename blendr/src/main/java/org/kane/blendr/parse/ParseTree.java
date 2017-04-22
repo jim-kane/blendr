@@ -1,15 +1,12 @@
 package org.kane.blendr.parse;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import org.kane.base.immutability.StandardImmutableObject;
-import org.kane.base.immutability.collections.FieldArrayList;
-import org.kane.base.immutability.collections.FieldList;
-import org.kane.base.serialization.Equality;
-import org.kane.base.serialization.Validator;
+import org.jimmutable.core.fields.FieldArrayList;
+import org.jimmutable.core.fields.FieldList;
+import org.jimmutable.core.objects.TransientImmutableObject;
+import org.jimmutable.core.utils.Validator;
 import org.kane.blendr.lex.TokenCloseTag;
 import org.kane.blendr.lex.TokenContent;
 import org.kane.blendr.lex.TokenOpenTag;
@@ -20,7 +17,7 @@ import org.kane.blendr.lex.TokenOpenTag;
  * @author jim.kane
  *
  */
-abstract public class ParseTree extends StandardImmutableObject
+abstract public class ParseTree extends TransientImmutableObject
 {
 	private ParseTree parent = null;
 	private FieldList<ParseTree> children = new FieldArrayList();

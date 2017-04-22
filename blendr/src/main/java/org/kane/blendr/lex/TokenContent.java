@@ -1,6 +1,6 @@
 package org.kane.blendr.lex;
 
-import org.kane.base.serialization.Validator;
+import org.jimmutable.core.utils.Validator;
 
 /**
  * A token that represents content (i.e. anything other than a open or close tag in blendr)

@@ -2,9 +2,7 @@ package org.kane.blendr.parse;
 
 import java.util.Collections;
 
-import org.kane.base.serialization.Validator;
-import org.kane.blendr.execute.Executor;
-import org.kane.blendr.lex.TokenContent;
+import org.jimmutable.core.utils.Validator;
 
 /**
  * A parse tree node used to represent content (e.g. something other than a tag)

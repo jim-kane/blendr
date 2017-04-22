@@ -1,14 +1,17 @@
 package org.kane.blendr;
 
-import org.kane.base.serialization.JavaCodeUtils;
-import org.kane.base.serialization.StandardObject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.jimmutable.core.objects.StandardObject;
 import org.kane.blendr.lex.LexOutput;
 import org.kane.blendr.lex.Lexer;
 import org.kane.blendr.lex.Tag;
 import org.kane.blendr.lex.Token;
 import org.kane.blendr.lex.TokenCloseTag;
-import org.kane.blendr.lex.TokenOpenTag;
 import org.kane.blendr.lex.TokenContent;
+import org.kane.blendr.lex.TokenOpenTag;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -41,18 +44,18 @@ public class LexTest extends TestCase
     	LexOutput output = Lexer.lex(original_source);
     	
     	// Construct lex by hand
-    	LexOutput.Builder builder = new LexOutput.Builder(original_source);
-    	builder.addToken(new TokenContent(original_source,0,original_source.length()));
+    	
+    	LexOutput created_by_hand = new LexOutput(original_source, Arrays.asList(new TokenContent(original_source,0,original_source.length())));
+    
     	
     	// Assert that the lexer and the by hand lex are equal
-    	assertEquals(output,builder.create());
+    	assertEquals(output,created_by_hand);
     }
     
     public void testTokenObjects()
     {
     	Token one;
     	Token two;
-    	
     	
     	{
     		one = new TokenContent("Hello World", 0, "Hello World".length());
@@ -109,45 +112,30 @@ public class LexTest extends TestCase
     	LexOutput from_lex = Lexer.lex(original_source);
     	
     	// Construct lex by hand
-    	LexOutput.Builder builder = new LexOutput.Builder(original_source);
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenOpenTag\":{\"start_position\":1,\"length\":6,\"operator\":\"OPERATOR_HTML\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenContent\":{\"start_position\":7,\"length\":15,\"text\":\"This is a test \"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenOpenTag\":{\"start_position\":22,\"length\":8,\"operator\":\"OPERATOR_SCRIPT\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenContent\":{\"start_position\":30,\"length\":11,\"text\":\" var foo = \"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenOpenTag\":{\"start_position\":41,\"length\":6,\"operator\":\"OPERATOR_HTML\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenContent\":{\"start_position\":47,\"length\":3,\"text\":\"bar\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenCloseTag\":{\"start_position\":50,\"length\":7,\"operator\":\"OPERATOR_HTML\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenContent\":{\"start_position\":57,\"length\":1,\"text\":\" \"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenCloseTag\":{\"start_position\":58,\"length\":9,\"operator\":\"OPERATOR_SCRIPT\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenContent\":{\"start_position\":67,\"length\":22,\"text\":\".<br\\/>Test execution: \"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenOpenTag\":{\"start_position\":89,\"length\":3,\"operator\":\"OPERATOR_EXECUTE_SCRIPT\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenContent\":{\"start_position\":92,\"length\":3,\"text\":\"foo\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenCloseTag\":{\"start_position\":95,\"length\":4,\"operator\":\"OPERATOR_EXECUTE_SCRIPT\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenContent\":{\"start_position\":99,\"length\":1,\"text\":\".\"}}", null));
-    	builder.addToken((Token)StandardObject.quietFromJSON("{\"org.kane.blendr.lex.TokenCloseTag\":{\"start_position\":100,\"length\":7,\"operator\":\"OPERATOR_HTML\"}}", null));
-    		
+    	List<Token> tokens = new ArrayList();
+    	tokens.add(new TokenOpenTag(Tag.OPERATOR_HTML,1));
+    	tokens.add(new TokenContent("This is a test ",7, 15));
+    	tokens.add(new TokenOpenTag(Tag.OPERATOR_SCRIPT,22));
+    	tokens.add(new TokenContent(" var foo = ",30, 11));
+    	tokens.add(new TokenOpenTag(Tag.OPERATOR_HTML,41));
+    	tokens.add(new TokenContent("bar",47, 3));
+    	tokens.add(new TokenCloseTag(Tag.OPERATOR_HTML,50));
+    	tokens.add(new TokenContent(" ",57, 1));
+    	tokens.add(new TokenCloseTag(Tag.OPERATOR_SCRIPT,58));
+    	tokens.add(new TokenContent(".<br/>Test execution: ",67, 22));
+    	tokens.add(new TokenOpenTag(Tag.OPERATOR_EXECUTE_SCRIPT,89));
+    	tokens.add(new TokenContent("foo",92, 3));
+    	tokens.add(new TokenCloseTag(Tag.OPERATOR_EXECUTE_SCRIPT,95));
+    	tokens.add(new TokenContent(".",99, 1));
+    	tokens.add(new TokenCloseTag(Tag.OPERATOR_HTML,100));
+    	
+ 	
     	//System.out.println(lexOutputToStatements(from_lex));
     	
-    	LexOutput from_builder = builder.create();
+    	LexOutput by_hand = new LexOutput(original_source, tokens);
     	
     	// Assert that the lexer and the by hand lex are equals
-    	assertEquals(from_lex,from_builder);
+    	assertEquals(from_lex,by_hand);
     }
-    
-    
-    static private String lexOutputToStatements(LexOutput output)
-    {
-    	StringBuilder ret = new StringBuilder();
-    	
-    	
-    	for ( Token t : output.getSimpleTokens() )
-    	{
-    		ret.append(String.format("builder.addToken((Token)StandardObject.quietFromJSON(%s, null));\n", JavaCodeUtils.toJavaStringLiteral(t.toJSON())));
-    	}
-    	
-    	return ret.toString();
-    }
-    
-    
  
 }

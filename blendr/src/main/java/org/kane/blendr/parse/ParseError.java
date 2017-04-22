@@ -1,6 +1,6 @@
 package org.kane.blendr.parse;
 
-import org.kane.base.serialization.Validator;
+import org.jimmutable.core.utils.Validator;
 import org.kane.blendr.lex.Token;
 
 /**

@@ -2,7 +2,7 @@ package org.kane.blendr.execute;
 
 import javax.script.ScriptException;
 
-import org.kane.base.serialization.Validator;
+import org.jimmutable.core.utils.Validator;
 import org.kane.blendr.lex.Token;
 import org.kane.blendr.parse.ParseError;
 

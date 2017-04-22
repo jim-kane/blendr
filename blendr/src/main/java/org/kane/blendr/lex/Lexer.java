@@ -1,11 +1,7 @@
 package org.kane.blendr.lex;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.kane.blendr.parse.Parser;
 
 /**
  * Class used to lex blendr source code
@@ -17,12 +13,15 @@ public class Lexer
 {
 	transient private LexStream input;
 	transient private StringBuilder text_token_under_construction = new StringBuilder();
-	transient private LexOutput.Builder output_builder;
+
+	transient private String original_source_code;
+	transient private List<Token> tokens = new ArrayList();
+	
 	
 	private Lexer(String input_raw)
 	{
 		this.input = new LexStream(input_raw);
-		output_builder = new LexOutput.Builder(input_raw);
+		this.original_source_code = input_raw;
 		
 		// remove any leading whitespace...
 		while( !input.isEmpty() && Character.isWhitespace(input.charAt(0)) )
@@ -44,7 +43,10 @@ public class Lexer
 		String str = text_token_under_construction.toString();
 		
 		if ( str.length() != 0 )
-			output_builder.addToken(new TokenContent(str,input.getPosition()-str.length(),str.length()));
+		{
+			Token token = new TokenContent(str,input.getPosition()-str.length(),str.length());
+			tokens.add(token);
+		}
 		
 		text_token_under_construction = new StringBuilder();
 	}
@@ -73,7 +75,7 @@ public class Lexer
 			{
 				addTextTokenUnderConstructionToOutput();
 				
-				output_builder.addToken(operator.createOpenToken(input.getPosition()));
+				tokens.add(operator.createOpenToken(input.getPosition()));
 				operator.eatOpen(input);
 				
 				return;
@@ -83,7 +85,7 @@ public class Lexer
 			{
 				addTextTokenUnderConstructionToOutput();
 				
-				output_builder.addToken(operator.createCloseToken(input.getPosition()));
+				tokens.add(operator.createCloseToken(input.getPosition()));
 				operator.eatClose(input);
 				
 				return;
@@ -95,7 +97,10 @@ public class Lexer
 		input.eat();
 	}
 	
-	private LexOutput createSimpleOutput() { return output_builder.create(); }
+	private LexOutput createSimpleOutput() 
+	{ 
+		return new LexOutput(original_source_code, tokens);
+	}
 	
 	/**
 	 * Lex a supplied piece of blendr source_code

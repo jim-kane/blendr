@@ -1,12 +1,11 @@
 package org.kane.blendr.parse;
 
-import org.kane.base.serialization.Validator;
 import org.kane.blendr.lex.LexOutput;
 import org.kane.blendr.lex.Lexer;
 import org.kane.blendr.lex.Token;
 import org.kane.blendr.lex.TokenCloseTag;
-import org.kane.blendr.lex.TokenOpenTag;
 import org.kane.blendr.lex.TokenContent;
+import org.kane.blendr.lex.TokenOpenTag;
 
 /**
  * A class that encapsulates the blendr parser

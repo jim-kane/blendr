@@ -11,7 +11,7 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-import org.kane.base.serialization.collections.LRUCache;
+import org.jimmutable.core.threading.LRUCache;
 import org.kane.blendr.lex.Tag;
 import org.kane.blendr.parse.ParseError;
 import org.kane.blendr.parse.ParseTree;

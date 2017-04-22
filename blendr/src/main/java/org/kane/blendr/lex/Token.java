@@ -1,7 +1,8 @@
 package org.kane.blendr.lex;
 
-import org.kane.base.immutability.StandardImmutableObject;
-import org.kane.base.serialization.*;
+import org.jimmutable.core.objects.TransientImmutableObject;
+import org.jimmutable.core.utils.Comparison;
+import org.jimmutable.core.utils.Validator;
 
 /**
  * The abstract base class representing a Token
@@ -9,7 +10,7 @@ import org.kane.base.serialization.*;
  * @author jim.kane
  *
  */
-abstract public class Token extends StandardImmutableObject
+abstract public class Token extends TransientImmutableObject<Token>
 {
 	private int start_position;
 	private int length;
@@ -26,6 +27,8 @@ abstract public class Token extends StandardImmutableObject
 		this.length = length;
 	}
 	
+	
+	
 	public int getSimpleStartPosition() { return start_position; }
 	public int getSimpleLength() { return length; }
 	
@@ -39,17 +42,14 @@ abstract public class Token extends StandardImmutableObject
 		Validator.min(length, 0);
 	}
 
-	public int compareTo(Object o) 
+	public int compareTo(Token other) 
 	{
-		if ( !(o instanceof Token) ) return 0;
-		Token t = (Token)o;
+		int ret = Comparison.startCompare();
 		
-		int compare;
+		ret = Comparison.continueCompare(ret, getSimpleStartPosition(), other.getSimpleStartPosition());
+		ret = Comparison.continueCompare(ret, getSimpleLength(), other.getSimpleLength());
 		
-		compare = Integer.compare(getSimpleStartPosition(), t.getSimpleStartPosition());
-		if ( compare != 0 ) return compare;
-		
-		return Integer.compare(getSimpleLength(), t.getSimpleLength());
+		return ret;
 	}
 	
 	public int hashCode()
