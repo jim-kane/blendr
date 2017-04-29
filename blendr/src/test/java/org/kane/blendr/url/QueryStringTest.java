@@ -32,7 +32,7 @@ public class QueryStringTest extends TestCase
         return new TestSuite( QueryStringTest.class );
     }
     
-    public void testLexer()
+    public void testQueryStrings()
     {
     	{
     		Map<String,String> expected_result = new HashMap();
@@ -89,13 +89,38 @@ public class QueryStringTest extends TestCase
     		test("$=%2B&foo=bar", expected_result);
     	}
     	
-    	// Test multiple set
     	{
     		Map<String,String> expected_result = new HashMap();
     		expected_result.put("foo", "baz");
     		
     		test("foo=bar&foo=baz", expected_result);
     	}
+    
+    	
+    	{
+    		Map<String,String> expected_result = new HashMap();
+    		expected_result.put("foo", "");
+    		expected_result.put("bar", "");
+    		
+    		
+    		test("foo&bar", expected_result);
+    	}
+    }
+    
+    public void testStringEncoding()
+    {
+    	testStringEncoding(null, "");
+    	testStringEncoding("", "");
+    	testStringEncoding(" ", "");
+    	testStringEncoding("\t\r\n", "");
+    	
+    	testStringEncoding("foo=bar", "foo=bar");
+    	testStringEncoding("FOO=bar", "foo=bar");
+    	testStringEncoding("FOO=BaR", "foo=BaR");
+    	
+    	testStringEncoding("$=%2B", "%24=%2B");
+    	
+    	testStringEncoding("foo=bar&baz=quz", "baz=quz&foo=bar");
     }
     
     public void test(String query_string, Map<String,String> expected_result)
@@ -103,6 +128,13 @@ public class QueryStringTest extends TestCase
     	QueryString qs = new QueryString(query_string);
     	
     	assertEquals(qs.getSimpleData(), expected_result);
+    }
+    
+    public void testStringEncoding(String query_string, String expected_result)
+    {
+    	QueryString qs = new QueryString(query_string);
+    	
+    	assertEquals(qs.toString(), expected_result);
     }
 }
 

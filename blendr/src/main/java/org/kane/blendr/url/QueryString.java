@@ -1,7 +1,9 @@
 package org.kane.blendr.url;
 
-import org.jimmutable.core.fields.FieldHashMap;
+import java.util.Map;
+
 import org.jimmutable.core.fields.FieldMap;
+import org.jimmutable.core.fields.FieldTreeMap;
 import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Validator;
 
@@ -24,10 +26,9 @@ public class QueryString extends Stringable
 	
 	public void normalize() 
 	{	
+		data = new FieldTreeMap();
 		// Populated the decoded data structure (effectively, parse the query string)
 		String query_string = getSimpleValue();
-		
-		data = new FieldHashMap();
 
 		if ( query_string == null ) query_string = "";
 
@@ -50,6 +51,8 @@ public class QueryString extends Stringable
 		}
 
 		data.freeze();
+		
+		super.setValue(convertNormalizedDecodedDataToString(data));
 	}
 
 	public void validate() 
@@ -81,5 +84,30 @@ public class QueryString extends Stringable
 	public FieldMap<String,String> getSimpleData() 
 	{ 
 		return data; 
+	}
+	
+	/**
+	 * Convert normalized (but not url encoded) data to a query string
+	 * 
+	 * @param decoded_data
+	 *            The normalized, decoded data to convert. Although any map may
+	 *            be used, it is best to use a map that naturally orders on keys
+	 *            (e.g. TreeMap, FieldTreeMap)
+	 * @return A valid query string
+	 */
+	static public String convertNormalizedDecodedDataToString(Map<String,String> decoded_data)
+	{
+		StringBuilder ret = new StringBuilder();
+
+		for ( Map.Entry<String, String> entry : decoded_data.entrySet() )
+		{
+			if ( ret.length() != 0 ) ret.append("&");
+
+			ret.append(URLCharacterEncoding.encode(entry.getKey(), ""));
+			ret.append("=");
+			ret.append(URLCharacterEncoding.encode(entry.getValue(), ""));
+		}
+
+		return ret.toString();
 	}
 }
