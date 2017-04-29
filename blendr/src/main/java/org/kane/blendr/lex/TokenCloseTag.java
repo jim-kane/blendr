@@ -3,7 +3,7 @@ package org.kane.blendr.lex;
 import org.jimmutable.core.utils.Validator;
 
 /**
- * A token that represents a open tag (e.g. {script} or {html}
+ * A token that represents a close tag (e.g. {/script} or {/html})
  * 
  * Final to ensure the call to complete() is safe 
  * 

@@ -137,5 +137,76 @@ public class LexTest extends TestCase
     	// Assert that the lexer and the by hand lex are equals
     	assertEquals(from_lex,by_hand);
     }
+    
+    public void testEscapeElement()
+    {
+    	String original_source = "{escape}This is an {html}test{/html}{/escape}";
+    	
+    	LexOutput from_lex = Lexer.lex(original_source);
+    	
+    	assertEquals(from_lex.getSimpleTokens().size(),1);
+    	
+    	assert(from_lex.getSimpleTokens().get(0) instanceof TokenContent);
+    	
+    	TokenContent content = (TokenContent)from_lex.getSimpleTokens().get(0);
+    	
+    	assertEquals(content.getSimpleText(),"This is an {html}test{/html}");
+    }
+    
+    public void testUnterminatedEscapeElement()
+    {
+    	String original_source = "{escape}This is an {html}test{/html}";
+    	
+    	LexOutput from_lex = Lexer.lex(original_source);
+    	
+    	assertEquals(from_lex.getSimpleTokens().size(),1);
+    	
+    	assert(from_lex.getSimpleTokens().get(0) instanceof TokenContent);
+    	
+    	TokenContent content = (TokenContent)from_lex.getSimpleTokens().get(0);
+    	
+    	assertEquals(content.getSimpleText(),"This is an {html}test{/html}");
+    }
+    
+    public void testBraceEscape()
+    {
+    	String original_source = "This is an &{;html&};test&{;/html&};";
+    	
+    	LexOutput from_lex = Lexer.lex(original_source);
+    	
+    	assertEquals(from_lex.getSimpleTokens().size(),1);
+    	
+    	assert(from_lex.getSimpleTokens().get(0) instanceof TokenContent);
+    	
+    	TokenContent content = (TokenContent)from_lex.getSimpleTokens().get(0);
+    	
+    	assertEquals(content.getSimpleText(),"This is an {html}test{/html}");
+    }
+    
+    public void testUnaryAccessControl()
+    {
+    	String original_source;
+    	LexOutput from_lex;
+    	
+    	
+    	for ( Tag tag : new Tag[]{Tag.OPERATOR_PRIVATE, Tag.OPERATOR_PUBLIC, Tag.OPERATOR_STAFF_PRIVATE, Tag.OPERATOR_CONSUMER_PRIVATE} )
+    	{
+    		original_source = tag.getSimpleUnaryString();
+    		
+    		from_lex = Lexer.lex(original_source);
+    		
+    		assertEquals(from_lex.getSimpleTokens().size(),2);
+    		
+    		assert(from_lex.getSimpleTokens().get(0) instanceof TokenOpenTag);
+    		assert(from_lex.getSimpleTokens().get(1) instanceof TokenCloseTag);
+    		
+    		TokenOpenTag open = (TokenOpenTag)from_lex.getSimpleTokens().get(0);
+    		TokenCloseTag close = (TokenCloseTag)from_lex.getSimpleTokens().get(1);
+    		
+    		assertEquals(open.getSimpleOperator(), tag);
+    		assertEquals(close.getSimpleOperator(), tag);
+    		
+    	}
+    }
  
 }

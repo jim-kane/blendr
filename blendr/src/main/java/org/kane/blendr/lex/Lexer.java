@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class Lexer 
 {
+	static private final char escaped_open_brace[] = "&{;".toCharArray();
+	static private final char escaped_close_brace[] = "&};".toCharArray();
+	
 	transient private LexStream input;
 	transient private StringBuilder text_token_under_construction = new StringBuilder();
 
@@ -65,12 +68,71 @@ public class Lexer
 		}
 	}
 	
+	/**
+	 * This function eats any escaped content at start of input
+	 * 
+	 * @return True of something was eaten, false otherwise
+	 */
+	private boolean eatEscapedContent()
+	{
+		if ( !Tag.OPERATOR_ESCAPE.atOpen(input) ) return false;
+		
+		addTextTokenUnderConstructionToOutput();
+		Tag.OPERATOR_ESCAPE.eatOpen(input);
+			
+		while(!input.isEmpty())
+		{
+			if ( Tag.OPERATOR_ESCAPE.atClose(input) )
+			{
+				Tag.OPERATOR_ESCAPE.eatClose(input);
+				break;
+			}
+			else
+			{
+				text_token_under_construction.append(input.charAt(0));
+				input.eat();
+			}
+		}
+			
+		addTextTokenUnderConstructionToOutput();
+		
+		return true;
+	}
+	
+	private boolean eatEscapedOpenBrace()
+	{
+		if ( !input.at(escaped_open_brace) ) return false;
+		
+		input.eat(escaped_open_brace.length);
+		text_token_under_construction.append('{');
+		
+		return true;
+	}
+	
+	private boolean eatEscapedCloseBrace()
+	{
+		if ( !input.at(escaped_close_brace) ) return false;
+		
+		input.eat(escaped_close_brace.length);
+		text_token_under_construction.append('}');
+		
+		return true;
+	}
+	
+	
+	
 	private void processInput()
 	{ 
 		if ( input.isEmpty() ) return;
+		if ( eatEscapedContent() ) return;
+		if ( eatEscapedOpenBrace() ) return;
+		if ( eatEscapedCloseBrace() ) return;
+		
 		
 		for ( Tag operator : Tag.values() )
 		{
+			if ( operator == Tag.OPERATOR_ESCAPE ) continue; // should never get here because this tag is handled before...
+			
 			if ( operator.atOpen(input) )
 			{
 				addTextTokenUnderConstructionToOutput();
@@ -91,6 +153,16 @@ public class Lexer
 				return;
 			}
 			
+			if ( operator.atUnary(input) )
+			{
+				addTextTokenUnderConstructionToOutput();
+				
+				tokens.add(operator.createOpenToken(input.getPosition()));
+				tokens.add(operator.createCloseToken(input.getPosition()));
+				operator.eatUnary(input);
+				
+				return;
+			}
 		}
 		
 		text_token_under_construction.append(input.charAt(0));
