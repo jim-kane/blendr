@@ -21,7 +21,7 @@ public class URLBuilder
 	
 	public URLBuilder(String url)
 	{
-		BlenderURL burl = new BlenderURL(url);
+		BlendrURL burl = new BlendrURL(url);
 		
 		this.protocol = burl.getOptionalProtocol(null);
 		this.user_info = burl.getOptionalUserInfo(null);
@@ -146,7 +146,7 @@ public class URLBuilder
 	
 	public String toString()
 	{
-		return BlenderURL.composeURIString(protocol, user_info, host, port, path, query_string_builder.asQueryString(), fragment);
+		return BlendrURL.composeURIString(protocol, user_info, host, port, path, query_string_builder.asQueryString(), fragment);
 	}
 	
 	public String asString()
@@ -154,8 +154,8 @@ public class URLBuilder
 		return toString();
 	}
 	
-	public BlenderURL asBlendrURL()
+	public BlendrURL asBlendrURL()
 	{
-		return new BlenderURL(toString());
+		return new BlendrURL(toString());
 	}
 }

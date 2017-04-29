@@ -36,7 +36,7 @@ public class QueryStringBuilderTest extends TestCase
     
     public void test(String src_url, String expected_normalized_url)
     {
-    	BlenderURL burl = new BlenderURL(src_url);
+    	BlendrURL burl = new BlendrURL(src_url);
     	assertEquals(expected_normalized_url, burl.toString());
     }
     

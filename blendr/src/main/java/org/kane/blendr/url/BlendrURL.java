@@ -6,7 +6,7 @@ import org.jimmutable.core.utils.Optional;
 import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Validator;
 
-public class BlenderURL extends Stringable
+public class BlendrURL extends Stringable
 {
 	static public final URI INVALID = createInvalidURI();
 	
@@ -18,7 +18,7 @@ public class BlenderURL extends Stringable
 	transient private QueryString query_string;
 	transient private String fragment;
 	
-	public BlenderURL(String url)
+	public BlendrURL(String url)
 	{
 		super(url == null ? "" : url.trim());
 	}
