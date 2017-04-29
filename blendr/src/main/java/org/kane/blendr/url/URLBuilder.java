@@ -16,7 +16,7 @@ public class URLBuilder
 	
 	public URLBuilder()
 	{
-		
+		query_string_builder = new QueryStringBuilder();
 	}
 	
 	public URLBuilder(String url)
@@ -52,7 +52,6 @@ public class URLBuilder
 	public boolean hasFragment() { return Optional.has(fragment, null); }
 	public String getOptionalFragment(String default_value) { return Optional.getOptional(fragment, null, default_value); } 
 	
-	public boolean isValidURL() { return !asURI().equals(BlenderURL.INVALID); }
 	
 	public void setProtocol(String value)
 	{
@@ -147,7 +146,7 @@ public class URLBuilder
 	
 	public String toString()
 	{
-		return asURI().toString();
+		return BlenderURL.composeURIString(protocol, user_info, host, port, path, query_string_builder.asQueryString(), fragment);
 	}
 	
 	public String asString()
@@ -155,18 +154,8 @@ public class URLBuilder
 		return toString();
 	}
 	
-	public URI asURI()
+	public BlenderURL asBlendrURL()
 	{
-		String qs = query_string_builder.asString();
-		if ( qs.length() == 0 ) qs = null;
-		
-		try
-		{
-			return new URI(protocol, user_info, host, port, path, qs, fragment); 
-		}
-		catch(Exception e)
-		{
-			return BlenderURL.INVALID;
-		}
+		return new BlenderURL(toString());
 	}
 }

@@ -10,8 +10,6 @@ public class BlenderURL extends Stringable
 {
 	static public final URI INVALID = createInvalidURI();
 	
-	transient private URI uri;
-	
 	transient private String protocol;
 	transient private String user_info;
 	transient private String host;
@@ -31,7 +29,7 @@ public class BlenderURL extends Stringable
 	{
 		try
 		{
-			uri = new URI(getSimpleValue());
+			URI uri = new URI(getSimpleValue());
 		
 			protocol = uri.getScheme();
 			if ( protocol != null ) protocol = protocol.trim().toLowerCase();
@@ -60,11 +58,11 @@ public class BlenderURL extends Stringable
 			
 			uri = new URI(protocol, user_info, host, port, path, qs, fragment); // noramlize the url
 			
-			setValue(uri.toString());
+			setValue(composeURIString(protocol, user_info, host, port, path, query_string, fragment));
 		}
 		catch(Exception e)
 		{
-			uri = INVALID;
+			// everything will be unset...
 		}
 	}
 
@@ -72,7 +70,6 @@ public class BlenderURL extends Stringable
 	@Override
 	public void validate() 
 	{
-		Validator.notNull(uri);
 		Validator.notNull(getSimpleValue());
 	} 
 	
@@ -97,9 +94,6 @@ public class BlenderURL extends Stringable
 	public boolean hasFragment() { return Optional.has(fragment, null); }
 	public String getOptionalFragment(String default_value) { return Optional.getOptional(fragment, null, default_value); } 
 	
-	public boolean isValidURL() { return !uri.equals(INVALID); }
-	
-	
 	static private URI createInvalidURI()
 	{
 		try
@@ -111,5 +105,58 @@ public class BlenderURL extends Stringable
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	static public String composeURIString(String protocol, String user_info, String host, int port, String path, QueryString query_string, String fragment)
+	{
+		StringBuilder as_string = new StringBuilder();
+		
+		if ( protocol != null && protocol.length() != 0 )
+		{
+			as_string.append(protocol);
+			as_string.append(":");
+		}
+		
+		if ( user_info != null || host != null || port > 0 )
+		{
+			as_string.append("//");
+		}
+		
+		if ( user_info != null && user_info.length() != 0 )
+		{
+			as_string.append(user_info);
+			as_string.append("@");
+		}
+		
+		if ( host != null && host.length() > 0 )
+		{
+			as_string.append(host);
+		}
+		
+		if ( port > 0 )
+		{
+			as_string.append(":");
+			as_string.append(port);
+		}
+		
+		if ( path != null )
+		{
+			as_string.append(path);
+		}
+		
+		if ( query_string != null && !query_string.isEmpty() )
+		{
+			as_string.append("?");
+			as_string.append(query_string.toString());
+		}
+		
+		
+		if ( fragment != null && fragment.length() > 0 )
+		{
+			as_string.append("#");
+			as_string.append(fragment);
+		}
+		
+		return as_string.toString().trim();
 	}
 }

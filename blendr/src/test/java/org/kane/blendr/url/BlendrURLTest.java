@@ -1,6 +1,6 @@
 package org.kane.blendr.url;
 
-public class BlenderURLTest 
+public class BlendrURLTest 
 {
 	
 }

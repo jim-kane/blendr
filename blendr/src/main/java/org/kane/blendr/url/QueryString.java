@@ -131,4 +131,6 @@ public class QueryString extends Stringable
 		if ( ret == null ) return default_value;
 		return ret;
 	}
+	
+	public boolean isEmpty() { return data.isEmpty(); }
 }
