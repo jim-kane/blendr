@@ -16,6 +16,8 @@ import org.jimmutable.core.utils.Validator;
  */
 public class QueryString extends Stringable
 {
+	static public final QueryString EMPTY = new QueryString("");
+	
 	// Store the *decoded*, normalized query string data
 	transient private FieldMap<String,String> data;
 	
@@ -109,5 +111,24 @@ public class QueryString extends Stringable
 		}
 
 		return ret.toString();
+	}
+	
+	public boolean hasKey(String key)
+	{
+		if ( key == null ) return false;
+		key = key.toLowerCase().trim();
+		
+		return data.containsKey(key);
+	}
+	
+	public String getValue(String key, String default_value)
+	{
+		if ( key == null ) return default_value;
+		
+		key = key.toLowerCase().trim();
+		
+		String ret = data.get(key);
+		if ( ret == null ) return default_value;
+		return ret;
 	}
 }

@@ -24,28 +24,20 @@ public class QueryStringBuilderTest extends TestCase
         return new TestSuite( QueryStringBuilderTest.class );
     }
     
-    public void testQueryBuilder()
+    public void testURL()
     {
-    	QueryStringBuilder builder = new QueryStringBuilder();
+    	test("","");
+    	test(null,"");
+    	test("  ","");
     	
-    	assertEquals(builder.asString(), "");
-    	
-    	builder.set("foo", "bar"); assertEquals(builder.asString(), "foo=bar");
-    	builder.set("FOO", "bar"); assertEquals(builder.asString(), "foo=bar");
-    	builder.set("FOO", "BaR"); assertEquals(builder.asString(), "foo=BaR");
-    	
-    	builder.set("bar", "baz"); assertEquals(builder.asString(), "bar=baz&foo=BaR");
-    	
-    	builder.remove("foo"); assertEquals(builder.asString(), "bar=baz");
-    	
-    	builder.clear(); assertEquals(builder.asString(), "");
-    	
-    	builder.addCode("foo", "a"); assertEquals(builder.asString(), "foo=a");
-    	builder.addCode("Foo", "b"); assertEquals(builder.asString(), "foo=a%7Cb");
-    	builder.addCode("FoO", "c"); assertEquals(builder.asString(), "foo=a%7Cb%7Cc");
-    	
-    	builder.removeCode("FOO", "a"); assertEquals(builder.asString(), "foo=b%7Cc");
+    	test("HTTP://WWW.GOOGLE.COM","http://www.google.com");
+    	test("http://www.google.com?FOO=bar&BAZ=quz","http://www.google.com?baz=quz&foo=bar");
     }
     
+    public void test(String src_url, String expected_normalized_url)
+    {
+    	BlenderURL burl = new BlenderURL(src_url);
+    	assertEquals(expected_normalized_url, burl.toString());
+    }
     
 }

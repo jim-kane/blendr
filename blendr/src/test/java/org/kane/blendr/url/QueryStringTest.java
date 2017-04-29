@@ -95,7 +95,6 @@ public class QueryStringTest extends TestCase
     		
     		test("foo=bar&foo=baz", expected_result);
     	}
-    
     	
     	{
     		Map<String,String> expected_result = new HashMap();
@@ -121,6 +120,8 @@ public class QueryStringTest extends TestCase
     	testStringEncoding("$=%2B", "%24=%2B");
     	
     	testStringEncoding("foo=bar&baz=quz", "baz=quz&foo=bar");
+    	
+    	testStringEncoding("foo=#bar", "foo=%23bar");
     }
     
     public void test(String query_string, Map<String,String> expected_result)
