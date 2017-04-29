@@ -1,12 +1,15 @@
 package org.kane.blendr.url;
 
 import java.net.URI;
+import org.jimmutable.core.utils.Optional;
 
 import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Validator;
 
 public class BlenderURL extends Stringable
 {
+	static public final URI INVALID = createInvalidURI();
+	
 	transient private URI uri;
 	
 	transient private String protocol;
@@ -16,8 +19,6 @@ public class BlenderURL extends Stringable
 	transient private String path;
 	transient private QueryString query_string;
 	transient private String fragment;
-	
-	
 	
 	public BlenderURL(String url)
 	{
@@ -63,7 +64,7 @@ public class BlenderURL extends Stringable
 		}
 		catch(Exception e)
 		{
-			uri = null;
+			uri = INVALID;
 		}
 	}
 
@@ -73,5 +74,42 @@ public class BlenderURL extends Stringable
 	{
 		Validator.notNull(uri);
 		Validator.notNull(getSimpleValue());
+	} 
+	
+	
+	public boolean hasProtocol() { return Optional.has(protocol, null); }
+	public String getOptionalProtocol(String default_value) { return Optional.getOptional(protocol, null, default_value); }
+	
+	public boolean hasUserInfo() { return Optional.has(user_info, null); }
+	public String getOptionalUserInfo(String default_value) { return Optional.getOptional(user_info, null, default_value); }
+	
+	public boolean hasHost() { return Optional.has(host, null); }
+	public String getOptionalHost(String default_value) { return Optional.getOptional(host, null, default_value); }
+	
+	public boolean hasPort() { return Optional.has(port, -1); }
+	public int getOptionalPort(int default_value) { return Optional.getOptional(port, -1, default_value); } 
+	
+	public boolean hasPath() { return Optional.has(path, null); }
+	public String getOptionalPath(String default_value) { return Optional.getOptional(path, null, default_value); }
+	
+	public QueryString getSimpleQueryString() { return query_string; }
+	
+	public boolean hasFragment() { return Optional.has(fragment, null); }
+	public String getOptionalFragment(String default_value) { return Optional.getOptional(fragment, null, default_value); } 
+	
+	public boolean isValidURL() { return !uri.equals(INVALID); }
+	
+	
+	static private URI createInvalidURI()
+	{
+		try
+		{
+			return new URI("blendr-error-invalid-uri");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
