@@ -1,5 +1,7 @@
 package org.kane.blendr.lex;
 
+import java.util.Map;
+
 import org.jimmutable.core.utils.Validator;
 
 /**
@@ -11,11 +13,13 @@ import org.jimmutable.core.utils.Validator;
 final public class TokenOpenTag extends Token
 {
 	private Tag operator;
+	private Attributes attributes;
 	
-	public TokenOpenTag(Tag operator, int start_position)
+	public TokenOpenTag(Tag operator, int start_position, Attributes attributes)
 	{
 		super(start_position,operator.getSimpleOpenString().length());
 		this.operator = operator;
+		this.attributes = attributes;
 		complete();
 	}
 	
@@ -23,6 +27,7 @@ final public class TokenOpenTag extends Token
 	{
 		super.validate();
 		Validator.notNull(operator);
+		Validator.notNull(attributes);
 	}
 	
 	public void freeze()
@@ -33,6 +38,8 @@ final public class TokenOpenTag extends Token
 	public String toString() { return operator.getSimpleOpenString(); }
 	public Tag getSimpleOperator() { return operator; }
 	
+	public Attributes getSimpleAttributes() { return attributes; }
+	
 	
 	public boolean equals(Object o) 
 	{
@@ -42,6 +49,17 @@ final public class TokenOpenTag extends Token
 		
 		TokenOpenTag t = (TokenOpenTag)o;
 		
-		return getSimpleOperator().equals(t.getSimpleOperator());
+		return getSimpleOperator().equals(t.getSimpleOperator()) && getSimpleAttributes().equals(t.getSimpleAttributes());
+	}
+	
+	public String diagnosticPrint()
+	{
+		return String.format(
+				"Token: %s\nOperator: %s\nAttributes: %s\nStart Position: %d\nLength: %d", 
+				"TokenOpenTag", 
+				operator.toString(), 
+				attributes.toString(),
+				super.getSimpleStartPosition(), 
+				super.getSimpleLength());
 	}
 }

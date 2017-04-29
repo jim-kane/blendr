@@ -85,4 +85,19 @@ public class LexOutput extends TransientImmutableObject
 	{
 		return tokens.toString();
 	}
+	
+	public String diagnosticPrint()
+	{
+		StringBuilder ret = new StringBuilder();
+		
+		for ( Token token : tokens )
+		{
+			ret.append(token.diagnosticPrint());
+			ret.append("\n\n");
+		}
+		
+		String str = ret.toString().trim();
+		
+		return str;
+	}
 }

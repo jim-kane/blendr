@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jimmutable.core.objects.StandardObject;
+import org.kane.blendr.lex.Attributes;
 import org.kane.blendr.lex.LexOutput;
 import org.kane.blendr.lex.Lexer;
 import org.kane.blendr.lex.Tag;
@@ -79,26 +80,26 @@ public class LexTest extends TestCase
     	}
     	
     	{
-    		one = new TokenOpenTag(Tag.OPERATOR_HTML,0);
-    		two = new TokenOpenTag(Tag.OPERATOR_HTML,0);
+    		one = new TokenOpenTag(Tag.HTML,0, Attributes.NO_ATTRIBUTES);
+    		two = new TokenOpenTag(Tag.HTML,0, Attributes.NO_ATTRIBUTES);
     		
     		assertEquals(one,two);
     		
-    		assertEquals(((TokenOpenTag)one).getSimpleOperator(),Tag.OPERATOR_HTML);
+    		assertEquals(((TokenOpenTag)one).getSimpleOperator(),Tag.HTML);
     	}
     	
     	{
-    		one = new TokenCloseTag(Tag.OPERATOR_HTML,0);
-    		two = new TokenCloseTag(Tag.OPERATOR_HTML,0);
+    		one = new TokenCloseTag(Tag.HTML,0);
+    		two = new TokenCloseTag(Tag.HTML,0);
     		
     		assertEquals(one,two);
     		
-    		assertEquals(((TokenCloseTag)one).getSimpleOperator(),Tag.OPERATOR_HTML);
+    		assertEquals(((TokenCloseTag)one).getSimpleOperator(),Tag.HTML);
     	}
     	
     	{
-    		one = new TokenCloseTag(Tag.OPERATOR_HTML,0);
-    		two = new TokenOpenTag(Tag.OPERATOR_HTML,0);
+    		one = new TokenCloseTag(Tag.HTML,0);
+    		two = new TokenOpenTag(Tag.HTML,0, Attributes.NO_ATTRIBUTES);
     		
     		assert(!one.equals(two));
     	}
@@ -113,21 +114,21 @@ public class LexTest extends TestCase
     	
     	// Construct lex by hand
     	List<Token> tokens = new ArrayList();
-    	tokens.add(new TokenOpenTag(Tag.OPERATOR_HTML,1));
+    	tokens.add(new TokenOpenTag(Tag.HTML,1, Attributes.NO_ATTRIBUTES));
     	tokens.add(new TokenContent("This is a test ",7, 15));
-    	tokens.add(new TokenOpenTag(Tag.OPERATOR_SCRIPT,22));
+    	tokens.add(new TokenOpenTag(Tag.SCRIPT,22, Attributes.NO_ATTRIBUTES));
     	tokens.add(new TokenContent(" var foo = ",30, 11));
-    	tokens.add(new TokenOpenTag(Tag.OPERATOR_HTML,41));
+    	tokens.add(new TokenOpenTag(Tag.HTML,41, Attributes.NO_ATTRIBUTES));
     	tokens.add(new TokenContent("bar",47, 3));
-    	tokens.add(new TokenCloseTag(Tag.OPERATOR_HTML,50));
+    	tokens.add(new TokenCloseTag(Tag.HTML,50));
     	tokens.add(new TokenContent(" ",57, 1));
-    	tokens.add(new TokenCloseTag(Tag.OPERATOR_SCRIPT,58));
+    	tokens.add(new TokenCloseTag(Tag.SCRIPT,58));
     	tokens.add(new TokenContent(".<br/>Test execution: ",67, 22));
-    	tokens.add(new TokenOpenTag(Tag.OPERATOR_EXECUTE_SCRIPT,89));
+    	tokens.add(new TokenOpenTag(Tag.EXECUTE_SCRIPT,89, Attributes.NO_ATTRIBUTES));
     	tokens.add(new TokenContent("foo",92, 3));
-    	tokens.add(new TokenCloseTag(Tag.OPERATOR_EXECUTE_SCRIPT,95));
+    	tokens.add(new TokenCloseTag(Tag.EXECUTE_SCRIPT,95));
     	tokens.add(new TokenContent(".",99, 1));
-    	tokens.add(new TokenCloseTag(Tag.OPERATOR_HTML,100));
+    	tokens.add(new TokenCloseTag(Tag.HTML,100));
     	
  	
     	//System.out.println(lexOutputToStatements(from_lex));
@@ -135,6 +136,21 @@ public class LexTest extends TestCase
     	LexOutput by_hand = new LexOutput(original_source, tokens);
     	
     	// Assert that the lexer and the by hand lex are equals
+    	assertEquals(from_lex,by_hand);
+    }
+    
+    public void testAttributes()
+    {
+    	String original_source = "{aspect name='foo'}Some Text{/aspect}";
+    	
+    	LexOutput from_lex = Lexer.lex(original_source);
+    	
+    	List<Token> tokens = new ArrayList();
+    	tokens.add(new TokenOpenTag(Tag.ASPECT,0, new Attributes("name","foo")));
+    	tokens.add(new TokenContent("Some Text",19, 9));
+    	tokens.add(new TokenCloseTag(Tag.ASPECT,28));
+    	
+    	LexOutput by_hand = new LexOutput(original_source, tokens);
     	assertEquals(from_lex,by_hand);
     }
     
@@ -189,7 +205,7 @@ public class LexTest extends TestCase
     	LexOutput from_lex;
     	
     	
-    	for ( Tag tag : new Tag[]{Tag.OPERATOR_PRIVATE, Tag.OPERATOR_PUBLIC, Tag.OPERATOR_STAFF_PRIVATE, Tag.OPERATOR_CONSUMER_PRIVATE} )
+    	for ( Tag tag : new Tag[]{Tag.PRIVATE, Tag.PUBLIC, Tag.STAFF_PRIVATE, Tag.CONSUMER_PRIVATE} )
     	{
     		original_source = tag.getSimpleUnaryString();
     		

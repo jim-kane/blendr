@@ -45,4 +45,15 @@ final public class TokenCloseTag extends Token
 		
 		return getSimpleOperator().equals(t.getSimpleOperator());
 	}
+	
+	
+	public String diagnosticPrint()
+	{
+		return String.format(
+				"Token: %s\nOperator: %s\nStart Position: %d\nLength: %d", 
+				"TokenCloseTag", 
+				operator.toString(), 
+				super.getSimpleStartPosition(), 
+				super.getSimpleLength());
+	}
 }

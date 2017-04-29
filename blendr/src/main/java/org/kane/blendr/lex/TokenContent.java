@@ -45,4 +45,14 @@ final public class TokenContent extends Token
 		
 		return t.getSimpleText().equals(getSimpleText());
 	}
+	
+	public String diagnosticPrint()
+	{
+		return String.format(
+				"Token: %s\nText: %s\nStart Position: %d\nLength: %d", 
+				"TokenContent", 
+				text, 
+				super.getSimpleStartPosition(), 
+				super.getSimpleLength());
+	}
 }

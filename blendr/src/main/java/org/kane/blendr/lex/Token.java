@@ -67,4 +67,6 @@ abstract public class Token extends TransientImmutableObject<Token>
 		
 		return true;
 	}
+	
+	abstract public String diagnosticPrint();
 }

@@ -83,7 +83,7 @@ public class ParseTest extends TestCase
     	{
     		ParseTree child = t.op(0);
     		assert(child instanceof ParseTreeTag);
-    		assertEquals(((ParseTreeTag)child).getSimpleType(),Tag.OPERATOR_HTML);
+    		assertEquals(((ParseTreeTag)child).getSimpleType(),Tag.HTML);
     		assert(child.nops() == 1);
     		
     		child = child.op(0);
@@ -96,7 +96,7 @@ public class ParseTest extends TestCase
     		ParseTree child = t.op(1);
     		
     		assert(child instanceof ParseTreeTag);
-    		assertEquals(((ParseTreeTag)child).getSimpleType(),Tag.OPERATOR_EXECUTE_SCRIPT);
+    		assertEquals(((ParseTreeTag)child).getSimpleType(),Tag.EXECUTE_SCRIPT);
     		assert(child.nops() == 1);
     		
     		child = child.op(0);
@@ -109,7 +109,7 @@ public class ParseTest extends TestCase
     		ParseTree child = t.op(2);
     		
     		assert(child instanceof ParseTreeTag);
-    		assertEquals(((ParseTreeTag)child).getSimpleType(),Tag.OPERATOR_CSS);
+    		assertEquals(((ParseTreeTag)child).getSimpleType(),Tag.CSS);
     		assert(child.nops() == 1);
     		
     		child = child.op(0);
@@ -122,7 +122,7 @@ public class ParseTest extends TestCase
     		ParseTree child = t.op(3);
     		
     		assert(child instanceof ParseTreeTag);
-    		assertEquals(((ParseTreeTag)child).getSimpleType(),Tag.OPERATOR_SCRIPT);
+    		assertEquals(((ParseTreeTag)child).getSimpleType(),Tag.SCRIPT);
     		assert(child.nops() == 1);
     		
     		child = child.op(0);

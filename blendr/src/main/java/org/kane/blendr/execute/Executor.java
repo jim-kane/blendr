@@ -203,7 +203,7 @@ public class Executor
 		{
 			ParseTreeTag tag = (ParseTreeTag)t;
 			
-			if ( tag.getSimpleType().equals(Tag.OPERATOR_SCRIPT) || tag.getSimpleType().equals(Tag.OPERATOR_EXECUTE_SCRIPT) )
+			if ( tag.getSimpleType().equals(Tag.SCRIPT) || tag.getSimpleType().equals(Tag.EXECUTE_SCRIPT) )
 			{
 				StringBuilder script = new StringBuilder();
 				
@@ -248,7 +248,7 @@ public class Executor
 		    		 
 		    		 //System.out.println("result: "+result);
 		    		 
-		    		 if ( tag.getSimpleType().equals(Tag.OPERATOR_EXECUTE_SCRIPT) && result != null )
+		    		 if ( tag.getSimpleType().equals(Tag.EXECUTE_SCRIPT) && result != null )
 		    		 {
 						output.append(result.toString());
 		    		 }

@@ -61,6 +61,30 @@ public class LexStream
 	}
 	
 	/**
+	 * Test to see if the current character is a whitespace
+	 * 
+	 * @return true if the current character is whitespace, false otherwise
+	 */
+	public boolean atWhitespace()
+	{
+		if ( length() == 0 ) return false;
+		return Character.isWhitespace(charAt(0));
+	}
+	
+	/**
+	 * Consume all leading whitespace
+	 * 
+	 */
+	public void eatWhitespace()
+	{
+		while(!isEmpty())
+		{
+			if ( !atWhitespace() ) return;
+			eat(1);
+		}
+	}
+	
+	/**
 	 * Eat the current character (advance the position to the next character)
 	 */
 	public void eat()

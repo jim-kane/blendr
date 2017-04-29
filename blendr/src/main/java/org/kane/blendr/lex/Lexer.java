@@ -2,6 +2,7 @@ package org.kane.blendr.lex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class used to lex blendr source code
@@ -13,6 +14,7 @@ public class Lexer
 {
 	static private final char escaped_open_brace[] = "&{;".toCharArray();
 	static private final char escaped_close_brace[] = "&};".toCharArray();
+	static private final char close_brace[] = "}".toCharArray();
 	
 	transient private LexStream input;
 	transient private StringBuilder text_token_under_construction = new StringBuilder();
@@ -75,16 +77,16 @@ public class Lexer
 	 */
 	private boolean eatEscapedContent()
 	{
-		if ( !Tag.OPERATOR_ESCAPE.atOpen(input) ) return false;
+		if ( !Tag.ESCAPE.atOpen(input) ) return false;
 		
 		addTextTokenUnderConstructionToOutput();
-		Tag.OPERATOR_ESCAPE.eatOpen(input);
+		Tag.ESCAPE.eatOpen(input);
 			
 		while(!input.isEmpty())
 		{
-			if ( Tag.OPERATOR_ESCAPE.atClose(input) )
+			if ( Tag.ESCAPE.atClose(input) )
 			{
-				Tag.OPERATOR_ESCAPE.eatClose(input);
+				Tag.ESCAPE.eatClose(input);
 				break;
 			}
 			else
@@ -131,13 +133,13 @@ public class Lexer
 		
 		for ( Tag operator : Tag.values() )
 		{
-			if ( operator == Tag.OPERATOR_ESCAPE ) continue; // should never get here because this tag is handled before...
+			if ( operator == Tag.ESCAPE ) continue; // should never get here because this tag is handled before...
 			
 			if ( operator.atOpen(input) )
 			{
 				addTextTokenUnderConstructionToOutput();
 				
-				tokens.add(operator.createOpenToken(input.getPosition()));
+				tokens.add(operator.createOpenToken(input.getPosition(), Attributes.NO_ATTRIBUTES));
 				operator.eatOpen(input);
 				
 				return;
@@ -157,10 +159,38 @@ public class Lexer
 			{
 				addTextTokenUnderConstructionToOutput();
 				
-				tokens.add(operator.createOpenToken(input.getPosition()));
+				tokens.add(operator.createOpenToken(input.getPosition(), Attributes.NO_ATTRIBUTES));
 				tokens.add(operator.createCloseToken(input.getPosition()));
 				operator.eatUnary(input);
 				
+				return;
+			}
+			
+			if ( operator.atOpenWithAttribs(input) )
+			{
+				addTextTokenUnderConstructionToOutput();
+			
+				int start_pos = input.getPosition();
+				
+				operator.eatOpenWithAttribs(input);
+				
+				while(!input.isEmpty())
+				{
+					if ( input.at(close_brace) )
+					{
+						input.eat();
+						break;
+					}
+					
+					text_token_under_construction.append(input.charAt(0));
+					input.eat();
+				}
+				
+				Attributes attributes = AttributeLexer.lex(text_token_under_construction.toString());
+				
+				
+				tokens.add(operator.createOpenToken(start_pos, attributes));
+				text_token_under_construction = new StringBuilder();
 				return;
 			}
 		}

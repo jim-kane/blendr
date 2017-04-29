@@ -1,5 +1,7 @@
 package org.kane.blendr.lex;
 
+import java.util.Map;
+
 /**
  * An enum of all of the valid tags in the blendr language
  * 
@@ -8,42 +10,48 @@ package org.kane.blendr.lex;
  */
 public enum Tag 
 {
-	OPERATOR_ESCAPE("escape"),
-	OPERATOR_SCRIPT("script"),
-	OPERATOR_EXECUTE_SCRIPT("!"),
-	OPERATOR_HTML("html"),
-	OPERATOR_CSS("css"),
+	ESCAPE("escape"),
+	SCRIPT("script"),
+	EXECUTE_SCRIPT("!"),
+	HTML("html"),
+	CSS("css"),
 	
-	OPERATOR_PRIVATE("private"),
-	OPERATOR_PUBLIC("public"),
-	OPERATOR_STAFF_PRIVATE("staff-private"),
-	OPERATOR_CONSUMER_PRIVATE("consumer-private"),
+	PRIVATE("private"),
+	PUBLIC("public"),
+	STAFF_PRIVATE("staff-private"),
+	CONSUMER_PRIVATE("consumer-private"),
 	
 	
-	OPERATOR_JSON("json"),
-	OPERATOR_INCLUDE("include"),
-	OPERATOR_INHERIT("inherit"),
+	AJAX("ajax"),
+	INCLUDE("include"),
+	INHERIT("inherit"),
 	
+	ASPECT("aspect"),
+	OVERRIDE("override"),
 	;
 	
 	
 	private char[] open_characters;
 	private char[] close_characters;
 	private char[] unary_characters;
+	private char[] open_w_attribs_characters;
 	
 	private String open_string;
 	private String close_string;
 	private String unary_string;
+	private String open_w_attribs_string;
 	
 	private Tag(String str)
 	{
 		open_string = String.format("{%s}", str);
 		close_string = String.format("{/%s}", str);
 		unary_string = String.format("{%s/}", str);
+		open_w_attribs_string = String.format("{%s ", str);
 		
 		this.open_characters = open_string.toCharArray();
 		this.close_characters = close_string.toCharArray();
 		this.unary_characters = unary_string.toCharArray();
+		this.open_w_attribs_characters = open_w_attribs_string.toCharArray();
 	}
 	
 	public String toString() { return open_string; }
@@ -88,6 +96,19 @@ public enum Tag
 	}
 	
 	/**
+	 * Is input at the open with attributes version of this tag?
+	 * 
+	 * @param input The input stream to test
+	 * @return True if input is at the open with attributes tag, false otherwise
+	 */
+	public boolean atOpenWithAttribs(LexStream input)
+	{
+		if ( input == null ) return false;
+		
+		return input.at(open_w_attribs_characters);
+	}
+	
+	/**
 	 * Eat the open tag
 	 * @param input The input stream
 	 */
@@ -117,18 +138,31 @@ public enum Tag
 		input.eat(unary_characters.length);
 	}
 	
+	/**
+	 * Eat the unary tag
+	 * @param input The input stream
+	 */
+	public void eatOpenWithAttribs(LexStream input)
+	{
+		if ( input == null ) return;
+		input.eat(open_w_attribs_characters.length);
+	}
+	
 	public String getSimpleOpenString() { return open_string; }
 	public String getSimpleCloseString() { return close_string; }
 	public String getSimpleUnaryString() { return unary_string; }
+	public String getSimpleOpenWithAttribs() { return open_w_attribs_string; }
+	
 	
 	/**
 	 * Create an open tag token
 	 * @param position The position (in the source code) of the start of the token
+	 * @param attributes The attributes of the open tag (generally, use AttributeLexer.lex to create)
 	 * @return A open tag token
 	 */
-	public TokenOpenTag createOpenToken(int position)
+	public TokenOpenTag createOpenToken(int position, Attributes attributes)
 	{
-		return new TokenOpenTag(this,position);
+		return new TokenOpenTag(this,position, attributes);
 	}
 	
 	/**
