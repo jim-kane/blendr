@@ -27,7 +27,7 @@ public class FileKeyTest extends TestCase
         return new TestSuite( FileKeyTest.class );
     }
     
-    public void testFileKey()
+    /*public void testFileKey()
     {
     	testOne(null,null);
     	testOne("",null);
@@ -81,6 +81,6 @@ public class FileKeyTest extends TestCase
     	if ( key == null ) assert(false);
     	
     	assertEquals(expected_extension, key.getOptionalExtension(null));
-    }
+    }*/
     
 }

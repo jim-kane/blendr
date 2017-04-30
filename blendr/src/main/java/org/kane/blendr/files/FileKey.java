@@ -6,7 +6,7 @@ import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Optional;
 import org.jimmutable.core.utils.Validator;
 
-public class FileKey extends Stringable
+abstract public class FileKey extends Stringable
 {
 	transient private String extension;
 	
@@ -130,16 +130,5 @@ public class FileKey extends Stringable
 	
 	public boolean hasExtension() { return Optional.has(extension, null); }
 	public String getOptionalExtension(String default_value) { return Optional.getOptional(extension, null, default_value); }
-	
-	static public FileKey createFileKey(String path, FileKey default_value)
-	{
-		try
-		{
-			return new FileKey(path);
-		}
-		catch(Exception e)
-		{
-			return default_value;
-		}
-	}
+
 }

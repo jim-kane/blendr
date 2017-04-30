@@ -1,13 +1,15 @@
 package org.kane.blendr.files;
 
+import java.util.Objects;
+
 import org.jimmutable.core.objects.TransientImmutableObject;
 import org.jimmutable.core.utils.Comparison;
 import org.jimmutable.core.utils.Optional;
 import org.jimmutable.core.utils.Validator;
 
-public class FileStatus extends StandardImmutableObject<FileStatus>
+public class FileStatus //extends StandardImmutableObject<FileStatus>
 {
-	private FileKey key; // requred
+	/*private FileKey key; // requred
 	private boolean exists; // required
 	private long last_modified_time; // optional, unset value = -1
 	private long file_size; // optional, unset value = -1
@@ -69,23 +71,22 @@ public class FileStatus extends StandardImmutableObject<FileStatus>
 		Validator.notNull(key);
 	}
 
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public int hashCode() 
+	{
+		return Objects.hash(key, exists, last_modified_time, file_size);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean equals(Object obj)
+	{
+		if ( !(obj instanceof FileStatus) )
 	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 	
 	
 }
