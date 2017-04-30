@@ -61,9 +61,9 @@ public class FileKeyTest extends TestCase
     	testExtension("/foo.bar/baz",null);
     	
     	testExtension("foo",null);
-    	
-    	//System.out.println(MimeTypes.getDefaultMimeByExtension("foo/bar/baz/foo.woff"));
     }
+    
+
     
     public void testOne(String path, String expected_to_string)
     {
