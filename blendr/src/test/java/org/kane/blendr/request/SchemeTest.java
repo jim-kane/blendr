@@ -1,4 +1,6 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
+
+import org.kane.blendr.request.Scheme;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

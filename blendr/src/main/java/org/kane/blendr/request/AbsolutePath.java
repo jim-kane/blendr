@@ -1,4 +1,4 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import org.jimmutable.core.exceptions.ValidationException;
 import org.jimmutable.core.fields.FieldArrayList;
@@ -6,6 +6,7 @@ import org.jimmutable.core.fields.FieldList;
 import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Optional;
 import org.jimmutable.core.utils.Validator;
+import org.kane.blendr.request.Host.MyConverter;
 
 /**
  * Class that wraps the "aboslute" path portion of a URL
@@ -30,6 +31,8 @@ import org.jimmutable.core.utils.Validator;
  */
 public class AbsolutePath extends Stringable
 {
+	static public final MyConverter CONVERTER = new MyConverter();
+	
 	transient private FieldList<PathLabel> labels;
 	transient private String extension;
 	
@@ -151,5 +154,20 @@ public class AbsolutePath extends Stringable
 	public FieldList<PathLabel> getSimpleLabels() 
 	{ 
 		return labels; 
+	}
+	
+	static public class MyConverter extends Stringable.Converter<AbsolutePath>
+	{
+		public AbsolutePath fromString(String str, AbsolutePath default_value)
+		{
+			try
+			{
+				return new AbsolutePath(str);
+			}
+			catch(Exception e)
+			{
+				return default_value;
+			}
+		}
 	}
 }

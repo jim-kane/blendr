@@ -1,4 +1,4 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,6 +7,7 @@ import org.kane.blendr.AttributeLexTest;
 import org.kane.blendr.execute.Executor;
 import org.kane.blendr.lex.AttributeLexer;
 import org.kane.blendr.lex.Attributes;
+import org.kane.blendr.request.QueryString;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

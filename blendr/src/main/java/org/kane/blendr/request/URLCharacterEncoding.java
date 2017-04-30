@@ -1,4 +1,4 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;

@@ -1,8 +1,9 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import org.jimmutable.core.exceptions.ValidationException;
 import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Validator;
+import org.kane.blendr.request.Host.MyConverter;
 
 /**
  * A wrapper around acceptable blendr fragments
@@ -15,6 +16,8 @@ import org.jimmutable.core.utils.Validator;
  */
 public class Fragment extends Stringable
 {
+	static public final MyConverter CONVERTER = new MyConverter();
+	
 	public Fragment(String value)
 	{		
 		super(value);
@@ -46,5 +49,18 @@ public class Fragment extends Stringable
 		}
 	}
 	
-	
+	static public class MyConverter extends Stringable.Converter<Fragment>
+	{
+		public Fragment fromString(String str, Fragment default_value)
+		{
+			try
+			{
+				return new Fragment(str);
+			}
+			catch(Exception e)
+			{
+				return default_value;
+			}
+		}
+	}
 }

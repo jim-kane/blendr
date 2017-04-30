@@ -1,4 +1,4 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import java.util.Map;
 
@@ -6,6 +6,7 @@ import org.jimmutable.core.fields.FieldMap;
 import org.jimmutable.core.fields.FieldTreeMap;
 import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Validator;
+import org.kane.blendr.request.Host.MyConverter;
 
 /**
  * This class is used to work with application/x-www-form-urlencoded data
@@ -16,6 +17,8 @@ import org.jimmutable.core.utils.Validator;
  */
 public class QueryString extends Stringable
 {
+	static public final MyConverter CONVERTER = new MyConverter();
+	
 	static public final QueryString EMPTY = new QueryString("");
 	
 	// Store the *decoded*, normalized query string data
@@ -133,4 +136,19 @@ public class QueryString extends Stringable
 	}
 	
 	public boolean isEmpty() { return data.isEmpty(); }
+	
+	static public class MyConverter extends Stringable.Converter<QueryString>
+	{
+		public QueryString fromString(String str, QueryString default_value)
+		{
+			try
+			{
+				return new QueryString(str);
+			}
+			catch(Exception e)
+			{
+				return default_value;
+			}
+		}
+	}
 }

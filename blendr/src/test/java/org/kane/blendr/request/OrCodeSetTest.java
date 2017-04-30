@@ -1,7 +1,9 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.kane.blendr.request.OrCodeSet;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

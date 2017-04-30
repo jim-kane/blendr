@@ -1,6 +1,8 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import java.util.Arrays;
+
+import org.kane.blendr.request.Host;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

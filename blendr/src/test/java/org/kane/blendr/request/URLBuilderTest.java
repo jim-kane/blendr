@@ -1,6 +1,8 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import java.net.URI;
+
+import org.kane.blendr.request.URLBuilder;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

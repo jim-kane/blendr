@@ -1,9 +1,10 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import org.jimmutable.core.fields.FieldSet;
 import org.jimmutable.core.fields.FieldTreeSet;
 import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Validator;
+import org.kane.blendr.request.Host.MyConverter;
 
 /**
  * An or set is a case-insensitive set of codes separated by |
@@ -18,6 +19,8 @@ import org.jimmutable.core.utils.Validator;
  */
 public class OrCodeSet extends Stringable 
 {
+	static public final MyConverter CONVERTER = new MyConverter();
+	
 	transient private FieldSet<String> code_set;
 	
 	public OrCodeSet(String value)
@@ -64,5 +67,20 @@ public class OrCodeSet extends Stringable
 	public FieldSet<String> getSimpleCodeSet()
 	{
 		return code_set;
+	}
+	
+	static public class MyConverter extends Stringable.Converter<OrCodeSet>
+	{
+		public OrCodeSet fromString(String str, OrCodeSet default_value)
+		{
+			try
+			{
+				return new OrCodeSet(str);
+			}
+			catch(Exception e)
+			{
+				return default_value;
+			}
+		}
 	}
 }

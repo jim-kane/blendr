@@ -1,7 +1,7 @@
 package org.kane.blendr.files;
 
 import org.eclipse.jetty.http.MimeTypes;
-import org.kane.blendr.url.BlendrURLTest;
+import org.kane.blendr.request.BlendrURLTest;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

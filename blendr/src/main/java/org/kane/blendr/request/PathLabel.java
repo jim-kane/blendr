@@ -1,8 +1,9 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import org.jimmutable.core.exceptions.ValidationException;
 import org.jimmutable.core.objects.Stringable;
 import org.jimmutable.core.utils.Validator;
+import org.kane.blendr.request.Host.MyConverter;
 
 /**
  * A blendr path (e.g. /foo/bar/baz/index.html) is made up of labels (PathLabel)
@@ -23,6 +24,8 @@ import org.jimmutable.core.utils.Validator;
 
 public class PathLabel extends Stringable
 {
+	static public final MyConverter CONVERTER = new MyConverter();
+	
 	public PathLabel(String label)
 	{
 		super(label);
@@ -95,5 +98,21 @@ public class PathLabel extends Stringable
 	public boolean hasExtension()
 	{
 		return getOptionalExtension(null) != null;
+	}
+	
+	
+	static public class MyConverter extends Stringable.Converter<PathLabel>
+	{
+		public PathLabel fromString(String str, PathLabel default_value)
+		{
+			try
+			{
+				return new PathLabel(str);
+			}
+			catch(Exception e)
+			{
+				return default_value;
+			}
+		}
 	}
 }

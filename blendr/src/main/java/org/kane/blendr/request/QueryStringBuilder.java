@@ -1,4 +1,4 @@
-package org.kane.blendr.url;
+package org.kane.blendr.request;
 
 import java.util.Map;
 import java.util.TreeMap;
