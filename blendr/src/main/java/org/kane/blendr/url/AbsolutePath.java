@@ -35,7 +35,7 @@ public class AbsolutePath extends Stringable
 	
 	public AbsolutePath(String path_str)
 	{
-		super(path_str);
+		super(path_str == null ? "" : path_str);
 	}
 
 	
