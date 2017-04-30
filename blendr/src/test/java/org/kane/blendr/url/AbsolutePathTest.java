@@ -91,6 +91,36 @@ public class AbsolutePathTest extends TestCase
     	assertEquals(new AbsolutePath("/bar/baz/plaz").hasExtension(), false);
     }
     
+    public void testLabels()
+    {
+    	{
+    		AbsolutePath path = new AbsolutePath("/");
+    		
+    		assertEquals(path.getSimpleLabels().size(),0);
+    	}
+    	
+    	{
+    		AbsolutePath path = new AbsolutePath("/foo/bar/baz.html");
+    		
+    		assertEquals(path.getSimpleLabels().size(),3);
+    		
+    		assertEquals(path.getSimpleLabels().get(0).toString(),"foo");
+    		assertEquals(path.getSimpleLabels().get(1).toString(),"bar");
+    		assertEquals(path.getSimpleLabels().get(2).toString(),"baz.html");
+    	}
+    	
+    	{
+    		AbsolutePath path = new AbsolutePath("\\\\FOO//baR/bAz.html");
+    		
+    		assertEquals(path.getSimpleLabels().size(),3);
+    		
+    		assertEquals(path.getSimpleLabels().get(0).toString(),"foo");
+    		assertEquals(path.getSimpleLabels().get(1).toString(),"bar");
+    		assertEquals(path.getSimpleLabels().get(2).toString(),"baz.html");
+    	}
+    	
+    }
+    
     public void testValid(String str, String expected_normalized)
     {
     	try
